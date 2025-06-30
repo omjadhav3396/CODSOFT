@@ -1,0 +1,113 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+// A simple structure to hold task information
+struct Task {
+    string description;
+    bool completed;
+};
+
+// Our main list of tasks
+vector<Task> tasks;
+
+// Ask the user to describe a new task and add it to the list
+void addTask() {
+    Task newTask;
+    cout << "\nWhat's the task you'd like to add? ";
+    cin.ignore(); // Make sure to clear any leftover input
+    getline(cin, newTask.description);
+    newTask.completed = false;
+    tasks.push_back(newTask);
+    cout << " Great! Your task has been added.\n\n";
+}
+
+// Show all tasks with their current status
+void viewTasks() {
+    if (tasks.empty()) {
+        cout << "\n Looks like you don't have any tasks yet.\n\n";
+        return;
+    }
+
+    cout << "\n📝 Here's what you have on your list:\n";
+    for (size_t i = 0; i < tasks.size(); ++i) {
+        string status = tasks[i].completed ? "✔️ Done" : "❌ Not Done";
+        cout << i + 1 << ". " << tasks[i].description << " - " << status << "\n";
+    }
+    cout << "\n";
+}
+
+// Let the user mark one of their tasks as completed
+void markTaskCompleted() {
+    viewTasks();
+    if (tasks.empty()) return;
+
+    int index;
+    cout << "Which task number did you complete? ";
+    cin >> index;
+
+    if (index >= 1 && index <= static_cast<int>(tasks.size())) {
+        tasks[index - 1].completed = true;
+        cout << " Awesome! Task marked as done.\n\n";
+    } else {
+        cout << " That doesn't seem to be a valid task number.\n\n";
+    }
+}
+
+// Remove a task from the list
+void removeTask() {
+    viewTasks();
+    if (tasks.empty()) return;
+
+    int index;
+    cout << "Enter the number of the task you'd like to remove: ";
+    cin >> index;
+
+    if (index >= 1 && index <= static_cast<int>(tasks.size())) {
+        cout << " Removed: \"" << tasks[index - 1].description << "\"\n";
+        tasks.erase(tasks.begin() + index - 1);
+        cout << "\n";
+    } else {
+        cout << " That task number isn't valid.\n\n";
+    }
+}
+
+// The main menu loop
+int main() {
+    int choice;
+
+    cout << " Welcome to your Personal To-Do List!\n";
+
+    while (true) {
+        cout << "\nWhat would you like to do?\n";
+        cout << "1️⃣ Add a new task\n";
+        cout << "2️⃣ View all tasks\n";
+        cout << "3️⃣ Mark a task as done\n";
+        cout << "4️⃣ Delete a task\n";
+        cout << "5️⃣ Exit\n";
+        cout << "👉 Enter your choice (1-5): ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                addTask();
+                break;
+            case 2:
+                viewTasks();
+                break;
+            case 3:
+                markTaskCompleted();
+                break;
+            case 4:
+                removeTask();
+                break;
+            case 5:
+                cout << "\n Goodbye! Stay productive!\n";
+                return 0;
+            default:
+                cout << "❌ Oops! Please choose a number between 1 and 5.\n\n";
+        }
+    }
+}
